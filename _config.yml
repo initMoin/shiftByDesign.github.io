@@ -1,0 +1,23 @@
+title: "shift byDesign"
+description: "Design × Code — The hub"
+email: init@shiftBy.Design
+
+url: "https://shiftby.design"   # set this when you go live
+baseurl: ""                      # keep empty for root
+
+plugins:
+  - jekyll-seo-tag               # added
+
+sass:
+  load_paths:
+    - _sass
+    - assets
+
+# theme: minima                  # custom site (keep commented)
+
+socials:
+  github:   https://github.com/initMoin
+  medium:   https://medium.com/shift-bydesign
+  500px:    https://500px.com/p/initshift
+  bluesky:  https://bsky.app/profile/shiftby.design
+  mastodon: https://mastodon.social/@initshift
