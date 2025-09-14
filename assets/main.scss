@@ -43,6 +43,8 @@
 
 html, body { height: 100%; }
 
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
   color: var(--fg);
@@ -71,7 +73,9 @@ body {
    BRAND (STACKED: logo / name / tagline)
    =========================== */
 .brand {
-  inline-size: min(92vw, 980px);
+  display: inline-grid;
+  margin-inline: auto;
+  max-inline-size: 92vw;
 }
 
 .brand-stack {
@@ -84,6 +88,7 @@ body {
 .swap-img {
   position: relative;
   display: inline-block;
+  max-inline-size: 100%;
 }
 .swap-img .layer {
   display: block;
@@ -113,9 +118,21 @@ body {
 }
 
 /* Tuned sizes (keep your current look) */
-.brand-logo  { width: clamp(120px, 16vw, 220px); opacity: .85; }
-.brand-name  { width: clamp(520px, 52vw, 780px); opacity: .85; }
+.brand-logo { inline-size:clamp(96px, 20vw, 220px); opacity:0.85; }
+.brand-name { inline-size:clamp(240px, 72vw, 780px); }
+
+/* .brand-logo  { width: clamp(120px, 16vw, 220px); opacity: .85; } */
+/* .brand-name  { width: clamp(520px, 52vw, 780px); opacity: .85; } */
 .tagline     { font-size: clamp(14px, 1.8vw, 18px); line-height: 1.4; }
+
+.brand-logo {
+  inline-size: clamp(120px, 16vw, 220px);
+  opacity: 0.85;
+}
+
+.brand-name {
+  inline-size: clamp(520px, 52vw, 780px);
+}
 
 /* On hover/focus, bring the brand assets to full strength */
 .brand:hover .brand-logo,
@@ -330,7 +347,17 @@ body {
 }
 
 /* Compact tweaks for very small screens */
-@media (max-width: 360px) {
+@media (max-width: 420px) {
+  .brand { max-inline-size: 94vw; }
+
+  .brand {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-inline-size: 92vw;
+  }
+
   :root {
     --social-pill-size: 44px;
     --social-icon-size: 26px;
