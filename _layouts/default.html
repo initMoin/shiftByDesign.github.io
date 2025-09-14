@@ -30,7 +30,9 @@
   <meta name="theme-color" content="#000000">
 
   <!-- Single, minified stylesheet (Sass compiled to /assets/main.css) -->
-  <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}" />
+  <link rel="stylesheet"
+      href="{{ '/assets/main.css' | relative_url }}?v={{ site.github.build_revision | default: site.time | date: '%s' }}"
+      />
 
   <!-- Hint user agent that we only provide a light color scheme -->
   <meta name="color-scheme" content="light">
