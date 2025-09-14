@@ -1,0 +1,62 @@
+# =========================
+# Site identity & metadata
+# =========================
+title: "shift byDesign"
+description: "shift is standard // design is craft"
+url: "https://shiftby.design"     # Canonical origin used by jekyll-seo-tag
+baseurl: ""                        # Keep empty when deploying at domain root
+email: "init@shiftby.design"
+
+# Helpful site-wide meta
+lang: en
+timezone: CST                     # NOTE: Consider an IANA zone (e.g., "America/Chicago") to avoid ambiguity.
+
+# =========
+# Build
+# =========
+markdown: kramdown
+kramdown:
+  input: GFM                      # GitHub-Flavored Markdown for consistency
+permalink: pretty                 # Clean URLs: /page/ instead of /page.html
+theme: null                       # No remote theme: all styling is project-owned
+
+# ==========
+# Sass/CSS
+# ==========
+sass:
+  sass_dir: assets                # SCSS source directory
+  style: compressed               # Minified CSS for production
+
+# ============================
+# Plugins (GH Pages–friendly)
+# ============================
+plugins:
+  - jekyll-seo-tag               # Injects SEO/meta tags from site/page data
+  - jekyll-feed                  # Generates /feed.xml for syndication
+
+# --------------------------------
+# jekyll-seo-tag: social identity
+# --------------------------------
+# Used for Open Graph / Twitter cards (even if you don't publish Twitter links).
+logo: /assets/brand/logomark-color.png
+social:
+  name: "shift byDesign"
+  links:
+    - https://github.com/initMoin
+    - https://medium.com/shift-bydesign
+    - https://500px.com/p/initshift
+    - https://bsky.app/profile/shiftby.design
+    - https://mastodon.social/@initshift
+
+# ===========================================
+# Exclude build artifacts & local-only files
+# ===========================================
+exclude:
+  - node_modules
+  - .jekyll-cache
+  - _site
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - package.json
+  - package-lock.json

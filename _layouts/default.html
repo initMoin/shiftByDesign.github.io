@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!--
+    Viewport tuned for mobile + iOS safe areas.
+    `viewport-fit=cover` allows the page to extend into the notch area cleanly.
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{{ page.title | default: site.title | default: "shift byDesign" }}</title>
+
+  {%- comment -%}
+    jekyll-seo-tag injects canonical, OG/Twitter, and structured meta using site/page data.
+    See _config.yml for site-level identity (logo, social links).
+  {%- endcomment -%}
+  {% seo %}
+
+  <!--
+    Favicons & PWA manifest:
+    - .ico for legacy desktop
+    - SVG for modern browsers (crisp at any scale)
+    - Apple touch icon for iOS home screen
+    - Manifest for installability (controls app name/theme color)
+  -->
+  <link rel="icon" href="{{ '/assets/brand/favicon.ico' | relative_url }}" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/brand/favicon.svg' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/brand/apple-touch-icon.png' | relative_url }}">
+  <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
+  <!-- Some UAs read theme-color from head for UI chrome color -->
+  <meta name="theme-color" content="#000000">
+
+  <!-- Single, minified stylesheet (Sass compiled to /assets/main.css) -->
+  <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}" />
+
+  <!-- Hint user agent that we only provide a light color scheme -->
+  <meta name="color-scheme" content="light">
+</head>
+<body>
+
+  <!--
+    ===== Brand block (stacked: logo, name, tagline) =====
+    Notes:
+      • The "swap-img" pattern layers a grayscale/base image under a color image.
+        CSS handles cross-fade on :hover, avoiding JS and reflow.
+      • The entire brand block uses semantic roles for better a11y.
+      • decoding="async" + fetchpriority="high" on hero assets improves LCP without blocking.
+  -->
+  <main class="site">
+    <section class="brand-wrap">
+      <div class="brand" role="banner" aria-label="shift byDesign">
+        <div class="brand-stack">
+
+          <!-- Logo cross-fade (gray → color).
+               The .layer.color opacity is driven purely by CSS :hover on .brand. -->
+          <div class="swap-img brand-logo">
+            <img class="layer base"
+                 src="{{ '/assets/brand/logomark-gray.png'  | relative_url }}"
+                 alt=""
+                 decoding="async"
+                 fetchpriority="high">
+            <img class="layer color"
+                 src="{{ '/assets/brand/logomark-color.png' | relative_url }}"
+                 alt=""
+                 decoding="async"
+                 fetchpriority="high">
+          </div>
+
+          <!-- Name cross-fade (85% black → full-color).
+               Keep alt text on the base layer for a11y; decorative color layer can be empty alt. -->
+          <div class="swap-img brand-name">
+            <img class="layer base"
+                 src="{{ '/assets/brand/logotype-black.png' | relative_url }}"
+                 alt="shift byDesign"
+                 decoding="async"
+                 fetchpriority="high">
+            <img class="layer color"
+                 src="{{ '/assets/brand/logotype-color.png' | relative_url }}"
+                 alt=""
+                 decoding="async"
+                 fetchpriority="high">
+          </div>
+
+          <!--
+            Tagline:
+              • Neutral body text by default.
+              • On brand hover: non-keywords go black; "shift" and "design" animate to brand colors.
+              • The // glyph uses a cursor-like animation via CSS (no JS).
+          -->
+          <p class="tagline">
+            <span class="shift">shift</span> is standard&nbsp;
+            <span class="double-slash">//</span>&nbsp;
+            <span class="design">design</span> is craft
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      Social row:
+        • Markup is included from _includes/social-media-links.html
+        • Colors/hover/focus states are handled fully in CSS for consistency.
+        • Target URLs are absolute and open in a new tab (see include file).
+    -->
+    {% include social-media-links.html %}
+  </main>
+
+  <!--
+    Progressive enhancement:
+      • The brand cross-fade and social hover effects are CSS-first.
+      • This tiny script only handles the “invert” hack for GitHub (white asset inverted to appear black at rest),
+        and swaps PNGs to white when hovering, where needed.
+      • If JS fails, the experience remains fully usable.
+  -->
+  <script>
+    (function () {
+      /* ---------- Social icons: white on hover, color bg “squircle” ---------- */
+      document.querySelectorAll('.social-item').forEach(function (tile) {
+        const img = tile.querySelector('img.icon');
+        const bg  = tile.querySelector('.bg');   // Optional: if a colored bg element exists
+        const mode = img?.getAttribute('data-mode') || ''; // 'invert' used only for GitHub
+        const srcDefault = img?.getAttribute('src');
+        const srcWhite   = img?.getAttribute('data-white');
+
+        // On pointer enter: colorize the pill and reveal white icon
+        tile.addEventListener('mouseenter', function () {
+          if (bg) {
+            const brandColor = getComputedStyle(tile).getPropertyValue('--brand').trim();
+            bg.style.setProperty('--bg', brandColor);
+          }
+          tile.classList.add('hovered');
+
+          if (mode === 'invert') {
+            // At hover, drop the invert so the white PNG stays white
+            if (img) img.style.filter = 'invert(0)';
+          } else if (srcWhite && img) {
+            img.src = srcWhite;
+          }
+        });
+
+        // On pointer leave: restore at-rest state
+        tile.addEventListener('mouseleave', function () {
+          tile.classList.remove('hovered');
+          if (mode === 'invert') {
+            // At rest, invert the white PNG so it reads as black on white bg
+            if (img) img.style.filter = 'invert(1)';
+          } else if (srcDefault && img) {
+            img.src = srcDefault;
+          }
+        });
+
+        // Initialize GitHub at-rest state
+        if (mode === 'invert' && img) {
+          img.style.filter = 'invert(1)';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

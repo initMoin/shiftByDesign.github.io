@@ -1,0 +1,16 @@
+github:
+  href: "https://github.com/initMoin"
+  title: "GitHub"
+  icon: "/assets/social/github-black.png"
+  icon_white: "/assets/social/github-white.png"
+  brand: "github"
+  badge: "new"
+  badge_until: "2025-10-31"
+
+medium:
+  href: "https://medium.com/shift-bydesign"
+  title: "Medium"
+  icon: "/assets/social/medium-black.png"
+  icon_white: "/assets/social/medium-white.png"
+  brand: "medium"
+  badge: "new"        # (omit if no badge)

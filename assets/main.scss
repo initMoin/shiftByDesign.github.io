@@ -1,0 +1,344 @@
+---
+---
+
+/* ===========================
+   VARIABLES
+   =========================== */
+:root {
+  /* Base */
+  --bg: #ffffff;
+  --fg: #111;
+  --muted: #6b7280;
+  --shadow: 0 12px 40px rgba(0,0,0,.10);
+
+  /* Brand palette */
+  --brand-orange: #FF4E00;
+  --brand-blue:   #00B2FF;
+
+  /* Social brand colors */
+  --github:   #000000;
+  --medium:   #000000;
+  --five00px: #000000;
+  --bluesky:  #1185FE;
+  --mastodon: #3088D4;   /* alt: #6364FF */
+  --email:    #1E90FF;   /* iOS Mail-ish */
+
+  /* Motion */
+  --anim-dur: 280ms;
+  --anim-ease: cubic-bezier(.25,.1,.25,1);
+
+  /* Social sizing */
+  --social-icon-size: 42px;
+  --social-pill-size: 69px;
+  --social-gap: 14px;
+  --social-bottom-pad: clamp(40px, 6vh, 72px);
+}
+
+/* ===========================
+   BASE / RESET
+   =========================== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  color: var(--fg);
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+
+/* ===========================
+   LAYOUT CANVAS
+   =========================== */
+/* Brand fills available height; social row sits at bottom */
+.site {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+/* Center the brand stack */
+.brand-wrap {
+  display: grid;
+  place-items: center;
+  padding-inline: 24px;
+}
+
+/* ===========================
+   BRAND (STACKED: logo / name / tagline)
+   =========================== */
+.brand {
+  inline-size: min(92vw, 980px);
+}
+
+.brand-stack {
+  display: grid;
+  justify-items: center;
+  row-gap: clamp(12px, 2vw, 24px);
+}
+
+/* Cross-fade utility for PNG layers (e.g., gray → color) */
+.swap-img {
+  position: relative;
+  display: inline-block;
+}
+.swap-img .layer {
+  display: block;
+  inline-size: 100%;
+  height: auto;
+}
+.swap-img .layer.color {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+/* Fade color layer in when brand hovered/focused */
+.brand:hover .swap-img .layer.color,
+.brand:focus-within .swap-img .layer.color {
+  opacity: 1;
+}
+
+/* Smooth defaults for brand block */
+.brand * {
+  transition:
+    opacity var(--anim-dur) var(--anim-ease),
+    transform var(--anim-dur) var(--anim-ease),
+    filter var(--anim-dur) var(--anim-ease),
+    color var(--anim-dur) var(--anim-ease),
+    background-color var(--anim-dur) var(--anim-ease);
+}
+
+/* Tuned sizes (keep your current look) */
+.brand-logo  { width: clamp(120px, 16vw, 220px); opacity: .85; }
+.brand-name  { width: clamp(520px, 52vw, 780px); opacity: .85; }
+.tagline     { font-size: clamp(14px, 1.8vw, 18px); line-height: 1.4; }
+
+/* On hover/focus, bring the brand assets to full strength */
+.brand:hover .brand-logo,
+.brand:hover .brand-name,
+.brand:focus-within .brand-logo,
+.brand:focus-within .brand-name {
+  opacity: 1;
+  filter: none;
+}
+
+/* ===========================
+   TAGLINE
+   =========================== */
+.tagline {
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.01em;
+  color: #7a7a7a; /* neutral for non-span text */
+  line-height: 1.25;
+  transition: color 260ms ease;
+}
+
+/* Words that colorize on brand hover */
+.tagline .shift,
+.tagline .design {
+  color: inherit;     /* neutral at rest */
+  font-weight: 700;   /* bold emphasis */
+  transition: color 260ms ease;
+}
+
+/* Neutral double-slash text replaced by animated pseudos (see below) */
+.tagline .double-slash {
+  position: relative;
+  display: inline-block;
+  color: transparent; /* hide original // text */
+  font: inherit;
+  letter-spacing: -0.19em; /* keep slashes visually tight */
+}
+
+/* On brand hover/focus, deepen the non-span text and tint the key words */
+.brand:hover .tagline,
+.brand:focus-within .tagline {
+  color: #000; /* non-span text to black */
+}
+.brand:hover .tagline .shift,
+.brand:focus-within .tagline .shift {
+  color: var(--brand-orange);
+}
+.brand:hover .tagline .design,
+.brand:focus-within .tagline .design {
+  color: var(--brand-blue);
+}
+
+/* ===========================
+   CURSOR-STYLE DOUBLE SLASHES
+   =========================== */
+@keyframes cursor-blink {
+  0%, 40%   { opacity: .18; }
+  50%, 90%  { opacity: 1; }
+  100%      { opacity: .18; }
+}
+
+/* Left & right slashes as pseudos so we can blink/stagger/colorize */
+.tagline .double-slash::before,
+.tagline .double-slash::after {
+  content: "/";
+  position: relative;
+  display: inline-block;
+  font: inherit;
+  line-height: 1;
+  color: rgba(0,0,0,.45);
+  text-shadow: 0 0 0 rgba(0,0,0,0);
+  animation: cursor-blink 1050ms steps(1, end) infinite;
+  transition: color .25s ease, text-shadow .25s ease;
+  font-weight: 700;
+}
+/* slight typing stagger on the right slash */
+.tagline .double-slash::after { animation-delay: .1s; }
+
+/* Intensify + color on brand hover */
+.brand:hover .tagline .double-slash::before,
+.brand:focus-within .tagline .double-slash::before {
+  color: var(--brand-orange);
+  text-shadow: 0 0 .35em rgba(255,78,0,.45);
+}
+.brand:hover .tagline .double-slash::after,
+.brand:focus-within .tagline .double-slash::after {
+  color: var(--brand-blue);
+  text-shadow: 0 0 .35em rgba(0,178,255,.45);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tagline,
+  .tagline .shift,
+  .tagline .design {
+    transition: none;
+  }
+  .tagline .double-slash::before,
+  .tagline .double-slash::after {
+    animation: none !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+  }
+}
+
+/* ===========================
+   SOCIAL ROW
+   =========================== */
+/* Pinned to bottom, centered */
+.social {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--social-bottom-pad);
+  display: flex;
+  justify-content: center;
+  pointer-events: auto;
+  z-index: 30;
+}
+
+.social-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3.2vw, 32px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each clickable tile (iOS-like pill behind icon) */
+.social-item .tile {
+  position: relative;
+  inline-size: clamp(40px, 4.8vw, 48px);
+  block-size: clamp(40px, 4.8vw, 48px);
+  border-radius: 22%;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Colored background “pill” appears on hover */
+.social-item .pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 22%;
+  background: var(--pill, #000);
+  opacity: 0;
+  transform: scale(.86);
+  transition: transform .22s ease, opacity .22s ease, background-color .22s ease;
+}
+
+/* 28×28 icon stack; keeps bitmaps contained */
+.social-item .icon-wrap {
+  position: relative;
+  inline-size: var(--social-icon-size);
+  block-size: var(--social-icon-size);
+}
+
+/* Both PNG states are stacked */
+.social-item .icon {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  display: block;
+  image-rendering: -webkit-optimize-contrast; /* crisp on Safari */
+}
+
+/* default/hover swap */
+.social-item .img--hover   { opacity: 0; transition: opacity .18s ease; }
+.social-item .img--default { opacity: 1; transition: opacity .18s ease; }
+.social-item .tile:hover .img--hover,
+.social-item .tile:focus-visible .img--hover   { opacity: 1; }
+.social-item .tile:hover .img--default,
+.social-item .tile:focus-visible .img--default { opacity: 0; }
+.social-item .tile:hover .pill,
+.social-item .tile:focus-visible .pill         { opacity: 1; transform: scale(1); }
+
+/* Per-network colors (via CSS var) */
+.social-item.github   { --pill: var(--github); }
+.social-item.medium   { --pill: var(--medium); }
+.social-item.five00px { --pill: var(--five00px); }
+.social-item.bluesky  { --pill: var(--bluesky); }
+.social-item.mastodon { --pill: var(--mastodon); }
+.social-item.email    { --pill: var(--email); }
+
+/* Ensure only social images get this constraint */
+.social img { max-width: 100%; height: 100%; }
+
+/* Optional: “new” capsule badge under any icon */
+.social-grid .social-item { position: relative; }
+.social-grid .social-item .new-badge {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  transform: translateX(-50%);
+  background: #E53935;
+  color: #fff;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1;
+  padding: 3px 8px;
+  border-radius: 999px;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,.12);
+  pointer-events: none;
+}
+
+/* Compact tweaks for very small screens */
+@media (max-width: 360px) {
+  :root {
+    --social-pill-size: 44px;
+    --social-icon-size: 26px;
+    --social-gap: 12px;
+  }
+  .social-grid .social-item .new-badge {
+    top: calc(100% + 4px);
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+}
