@@ -33,6 +33,7 @@ sass:
 plugins:
   - jekyll-seo-tag               # Injects SEO/meta tags from site/page data
   - jekyll-feed                  # Generates /feed.xml for syndication
+  - jekyll-sitemap
 
 # --------------------------------
 # jekyll-seo-tag: social identity
