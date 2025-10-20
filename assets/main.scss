@@ -284,9 +284,8 @@ body {
 }
 
 /* ------------------------------------
-   SHIFT PORTAL DOT — ELECTRIC SINGULARITY
+   FORGE PORTAL DOT — BYDESIGN ENTRY
    ------------------------------------ */
-
 .portal-wrapper {
   position: fixed;
   bottom: 36px;
@@ -299,87 +298,83 @@ body {
   user-select: none;
 }
 
-/* The dot — larger, responsive, and alive */
-.portal-dot {
+/* Outer link area for proper centering */
+.portal-core {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
   position: relative;
-  font-size: 3rem;
-  color: #ff4e00;
   text-decoration: none;
-  opacity: 0.85;
-  transition: opacity .6s ease, transform .6s ease, text-shadow .6s ease;
-}
-.portal-wrapper:hover .portal-dot {
-  opacity: 1;
-  transform: scale(1.18);
-  text-shadow: 0 0 14px rgba(255,78,0,0.9);
+  transition: transform .5s ease;
 }
 
-/* ⚡ Electric Field — Dynamic flicker arcs that scale with dot */
-.portal-dot::before,
-.portal-dot::after {
+/* Inner dot */
+.portal-dot {
+  font-size: 2.6rem;
+  color: #ff4e00;
+  opacity: 0.9;
+  text-shadow: 0 0 8px rgba(255,78,0,.5);
+  transition: transform .6s ease, text-shadow .6s ease;
+}
+
+.portal-core:hover .portal-dot {
+  transform: scale(1.12);
+  text-shadow: 0 0 16px rgba(255,78,0,.8);
+}
+
+/* Electric arcs — not perfect circles, now orbiting flickers */
+.portal-core::before,
+.portal-core::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 1.4em;
-  height: 1.4em;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0;
   pointer-events: none;
-  filter: blur(3px);
-  z-index: -1;
-  background: conic-gradient(
-    from 0deg,
-    rgba(255, 78, 0, 0.6),
-    rgba(82, 190, 255, 0.4),
-    rgba(255, 78, 0, 0.7),
-    rgba(82, 190, 255, 0.3),
-    rgba(255, 78, 0, 0.6)
-  );
-  background-size: 200% 200%;
-  animation: colorPulse 12s ease-in-out infinite alternate;
-}
-
-/* Color breathing effect (Forge → Blue → Forge) */
-@keyframes colorPulse {
-  0%   { filter: hue-rotate(0deg) brightness(1); }
-  50%  { filter: hue-rotate(25deg) brightness(1.2); }
-  100% { filter: hue-rotate(0deg) brightness(1); }
-}
-
-.portal-wrapper:hover .portal-dot::before,
-.portal-wrapper:hover .portal-dot::after {
-  opacity: 0.55;
-  animation: electricFlicker 1.6s infinite ease-in-out alternate, colorPulse 12s ease-in-out infinite alternate;
-}
-
-.portal-wrapper:hover .portal-dot::after {
-  animation-delay: 0.4s;
-  filter: blur(6px);
-}
-
-/* Electric Flicker Behavior */
-@keyframes electricFlicker {
-  0%   { transform: translate(-50%, -50%) scale(1.05); opacity: 0.35; filter: blur(4px); }
-  15%  { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); opacity: 0.7; }
-  35%  { transform: translate(-50%, -50%) scale(0.95) rotate(-3deg); opacity: 0.45; }
-  55%  { transform: translate(-50%, -50%) scale(1.1) rotate(4deg); opacity: 0.8; }
-  75%  { transform: translate(-50%, -50%) scale(1.05) rotate(-2deg); opacity: 0.6; }
-  100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; filter: blur(5px); }
-}
-
-/* Smooth fade decay when hover ends */
-.portal-wrapper .portal-dot::before,
-.portal-wrapper .portal-dot::after {
-  transition: opacity 1.2s ease;
-}
-.portal-wrapper:not(:hover) .portal-dot::before,
-.portal-wrapper:not(:hover) .portal-dot::after {
   opacity: 0;
+  width: 140%;
+  height: 140%;
+  border: 2px solid rgba(255,78,0,0.2);
+  filter: blur(3px);
 }
 
-/* CTA Text Above Dot */
+.portal-core::before {
+  border-top-color: rgba(255,78,0,0.7);
+  border-right-color: transparent;
+  border-bottom-color: rgba(255,78,0,0.4);
+  border-left-color: transparent;
+  animation: electricArcA 2.8s infinite ease-in-out alternate;
+}
+
+.portal-core::after {
+  border-top-color: transparent;
+  border-right-color: rgba(255,78,0,0.5);
+  border-bottom-color: transparent;
+  border-left-color: rgba(255,78,0,0.3);
+  animation: electricArcB 3.1s infinite ease-in-out alternate;
+}
+
+.portal-core:hover::before,
+.portal-core:hover::after {
+  opacity: 1;
+}
+
+/* Arc motion for irregular rotation */
+@keyframes electricArcA {
+  0%,100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(12deg) scale(1.08); }
+}
+
+@keyframes electricArcB {
+  0%,100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(-14deg) scale(1.1); }
+}
+
+/* CTA Text */
 .portal-cta {
   color: #b4b4b4;
   font-size: 0.9rem;
@@ -393,39 +388,18 @@ body {
   color: #ff4e00;
   font-weight: 700;
   letter-spacing: 0.015em;
-  text-shadow:
-    0 0 4px rgba(255,78,0,.6),
-    0 0 8px rgba(255,78,0,.4);
+  text-shadow: 0 0 4px rgba(255,78,0,.6), 0 0 8px rgba(255,78,0,.4);
 }
 
-/* Hover fade-in / linger fade-out */
 .portal-wrapper:hover .portal-cta {
   opacity: 0.9;
   transform: translateY(0);
 }
-.portal-wrapper:not(:hover) .portal-cta {
-  transition-delay: 0.6s;
-}
 
-/* Accessibility: reduce motion support */
-@media (prefers-reduced-motion: reduce) {
-  .portal-dot, .portal-cta {
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* Mobile adjustments */
+/* Responsive */
 @media (max-width: 640px) {
-  .portal-wrapper {
-    bottom: 24px;
-    right: 28px;
-    gap: 6px;
-  }
-  .portal-dot {
-    font-size: 1.8rem;
-  }
-  .portal-cta {
-    font-size: 0.8rem;
-  }
+  .portal-wrapper { bottom: 24px; right: 28px; }
+  .portal-core { width: 2.2rem; height: 2.2rem; }
+  .portal-dot { font-size: 1.8rem; }
+  .portal-cta { font-size: 0.8rem; }
 }
