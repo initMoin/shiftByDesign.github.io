@@ -284,7 +284,7 @@ body {
 }
 
 /* ----------------------------
-   SHIFT PORTAL DOT + CTA + AURA
+   SHIFT PORTAL DOT — ELECTRIFIED
    ---------------------------- */
 
 .portal-wrapper {
@@ -292,100 +292,103 @@ body {
   bottom: 36px;
   right: 44px;
   display: flex;
-  flex-direction: column-reverse; /* CTA above the dot */
+  flex-direction: column; /* CTA now above dot */
   align-items: center;
   gap: 8px;
   z-index: 1000;
   user-select: none;
 }
 
-/* Base dot */
+/* Portal Dot Base */
 .portal-dot {
   position: relative;
   font-size: 1.9rem;
-  color: #ff4e00; /* Forge Orange */
+  color: #ff4e00;
   text-decoration: none;
   opacity: 0.75;
-  transition: opacity .4s ease, transform .4s ease, text-shadow .6s ease;
-}
-.portal-dot:hover {
-  opacity: 1;
-  transform: scale(1.25);
-  text-shadow: 0 0 10px rgba(255,78,0,.8);
+  transition: opacity .6s ease, transform .6s ease, text-shadow .6s ease;
 }
 
-/* Electric aura ring */
+/* Hover grows, glow increases, but decays softly */
+.portal-wrapper:hover .portal-dot {
+  opacity: 1;
+  transform: scale(1.25);
+  text-shadow: 0 0 12px rgba(255,78,0,0.9);
+}
+
+/* ⚡ Electric “arcs” effect */
 .portal-dot::before, .portal-dot::after {
   content: "";
   position: absolute;
-  top: 50%; left: 50%;
-  width: 2.5em; height: 2.5em;
+  top: 50%;
+  left: 50%;
+  width: 1.6em;
+  height: 1.6em;
   border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 250deg,
+    rgba(255,78,0,0.6) 260deg 265deg,
+    transparent 270deg 360deg
+  );
   opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg);
   pointer-events: none;
-  background: radial-gradient(circle, rgba(255,78,0,.25) 0%, rgba(255,78,0,0) 70%);
-  filter: blur(4px);
+  filter: blur(2px);
   z-index: -1;
 }
 
-.portal-dot:hover::before {
-  animation: electricAura 1.8s ease-in-out infinite alternate;
-  opacity: 0.45;
+/* Opposing directional arcs that circle slowly */
+.portal-wrapper:hover .portal-dot::before {
+  animation: arcSpin 2.4s linear infinite;
+  opacity: 0.4;
+}
+.portal-wrapper:hover .portal-dot::after {
+  animation: arcSpinReverse 2.8s linear infinite;
+  opacity: 0.3;
 }
 
-.portal-dot:hover::after {
-  animation: electricAuraReverse 2.1s ease-in-out infinite alternate;
-  opacity: 0.35;
+@keyframes arcSpin {
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes arcSpinReverse {
+  0%   { transform: translate(-50%, -50%) rotate(360deg); }
+  100% { transform: translate(-50%, -50%) rotate(0deg); }
 }
 
-/* Subtle opposing rotations */
-@keyframes electricAura {
-  0% { transform: translate(-50%, -50%) scale(0.8) rotate(0deg); opacity: 0.25; }
-  50% { transform: translate(-50%, -50%) scale(0.9) rotate(60deg); opacity: 0.55; }
-  100% { transform: translate(-50%, -50%) scale(0.85) rotate(120deg); opacity: 0.35; }
+/* Smooth hover-out decay */
+.portal-wrapper .portal-dot::before,
+.portal-wrapper .portal-dot::after {
+  transition: opacity 1s ease;
 }
-@keyframes electricAuraReverse {
-  0% { transform: translate(-50%, -50%) scale(0.85) rotate(0deg); opacity: 0.35; }
-  50% { transform: translate(-50%, -50%) scale(0.95) rotate(-40deg); opacity: 0.55; }
-  100% { transform: translate(-50%, -50%) scale(0.9) rotate(-80deg); opacity: 0.3; }
+.portal-wrapper:not(:hover) .portal-dot::before,
+.portal-wrapper:not(:hover) .portal-dot::after {
+  opacity: 0;
 }
 
 /* CTA text */
 .portal-cta {
-  color: #b4b4b4;
+  color: #c7c7c7;
   font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.025em;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.6s ease, transform 0.6s ease;
   pointer-events: none;
 }
 .portal-cta strong {
-  color: #e8e8e8;
+  color: #ffffff;
   font-weight: 600;
 }
 
-/* Hover fade-in */
+/* Fade-in on hover, soft linger fade-out */
 .portal-wrapper:hover .portal-cta {
-  opacity: 0.85;
+  opacity: 0.9;
   transform: translateY(0);
 }
-
-/* Smooth linger fade-out */
 .portal-wrapper:not(:hover) .portal-cta {
   transition-delay: 0.6s;
-}
-
-/* Click pulse */
-@keyframes portalPulse {
-  0% { text-shadow: 0 0 0 rgba(255,78,0,.8); transform: scale(1); }
-  50% { text-shadow: 0 0 20px rgba(255,78,0,1); transform: scale(1.35); }
-  100% { text-shadow: 0 0 0 rgba(255,78,0,.8); transform: scale(1); }
-}
-.portal-dot:active {
-  animation: portalPulse 0.6s ease;
 }
 
 /* Accessibility */
