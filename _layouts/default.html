@@ -174,16 +174,16 @@
   </a>
 </div>
   <script>
+/* Fade-out navigation (respect reduced motion) */
 (() => {
-  const dot = document.querySelector('.portal-dot');
-  if (!dot) return;
-
+  const link = document.querySelector('.shift-portal.shift-portal--forge .shift-portal__core');
+  if (!link) return;
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    dot.addEventListener('click', e => {
+    link.addEventListener('click', (e) => {
       e.preventDefault();
       document.body.style.transition = 'opacity 0.6s ease';
       document.body.style.opacity = '0';
-      setTimeout(() => window.location = dot.href, 600);
+      setTimeout(() => window.location = link.getAttribute('href'), 600);
     });
   }
 })();
