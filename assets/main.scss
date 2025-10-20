@@ -283,93 +283,92 @@ body {
   }
 }
 
-/* ----------------------------
-   SHIFT PORTAL DOT — ELECTRIFIED
-   ---------------------------- */
+/* ------------------------------------
+   SHIFT PORTAL DOT — ELECTRIC SINGULARITY
+   ------------------------------------ */
 
 .portal-wrapper {
   position: fixed;
   bottom: 36px;
   right: 44px;
   display: flex;
-  flex-direction: column; /* CTA now above dot */
+  flex-direction: column;
   align-items: center;
   gap: 8px;
   z-index: 1000;
   user-select: none;
 }
 
-/* Portal Dot Base */
+/* The dot — now slightly larger and more physical */
 .portal-dot {
   position: relative;
-  font-size: 1.9rem;
+  font-size: 2.2rem; /* slightly bigger base */
   color: #ff4e00;
   text-decoration: none;
-  opacity: 0.75;
+  opacity: 0.8;
   transition: opacity .6s ease, transform .6s ease, text-shadow .6s ease;
 }
-
-/* Hover grows, glow increases, but decays softly */
 .portal-wrapper:hover .portal-dot {
   opacity: 1;
-  transform: scale(1.25);
+  transform: scale(1.3); /* subtle enlargement */
   text-shadow: 0 0 12px rgba(255,78,0,0.9);
 }
 
-/* ⚡ Electric “arcs” effect */
+/* ⚡ Electric Sparks — subtle flicker arcs around the dot */
 .portal-dot::before, .portal-dot::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 1.6em;
-  height: 1.6em;
+  width: 2.5em;
+  height: 2.5em;
   border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg 250deg,
-    rgba(255,78,0,0.6) 260deg 265deg,
-    transparent 270deg 360deg
-  );
+  transform: translate(-50%, -50%);
   opacity: 0;
-  transform: translate(-50%, -50%) rotate(0deg);
   pointer-events: none;
-  filter: blur(2px);
+  filter: blur(3px);
   z-index: -1;
+  background: radial-gradient(circle,
+    rgba(255, 78, 0, 0.8) 0%,
+    rgba(255, 78, 0, 0.4) 25%,
+    rgba(255, 78, 0, 0) 70%);
 }
 
-/* Opposing directional arcs that circle slowly */
-.portal-wrapper:hover .portal-dot::before {
-  animation: arcSpin 2.4s linear infinite;
-  opacity: 0.4;
-}
+.portal-wrapper:hover .portal-dot::before,
 .portal-wrapper:hover .portal-dot::after {
-  animation: arcSpinReverse 2.8s linear infinite;
-  opacity: 0.3;
+  opacity: 0.5;
+  animation: electricFlicker 1.6s infinite ease-in-out alternate;
 }
 
-@keyframes arcSpin {
-  0%   { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-@keyframes arcSpinReverse {
-  0%   { transform: translate(-50%, -50%) rotate(360deg); }
-  100% { transform: translate(-50%, -50%) rotate(0deg); }
+.portal-wrapper:hover .portal-dot::after {
+  animation-delay: 0.4s;
+  filter: blur(6px);
 }
 
-/* Smooth hover-out decay */
+@keyframes electricFlicker {
+  0%   { transform: translate(-50%, -50%) scale(0.95); opacity: 0.35; filter: blur(4px); }
+  10%  { transform: translate(-50%, -50%) scale(1.05) rotate(4deg); opacity: 0.8; }
+  25%  { transform: translate(-50%, -50%) scale(0.9) rotate(-3deg); opacity: 0.4; }
+  40%  { transform: translate(-50%, -50%) scale(1.1) rotate(2deg); opacity: 0.75; }
+  55%  { transform: translate(-50%, -50%) scale(1.02) rotate(-2deg); opacity: 0.5; }
+  70%  { transform: translate(-50%, -50%) scale(0.98) rotate(3deg); opacity: 0.7; }
+  85%  { transform: translate(-50%, -50%) scale(1.06) rotate(-4deg); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.45; filter: blur(5px); }
+}
+
+/* Smooth fade-out on hover off */
 .portal-wrapper .portal-dot::before,
 .portal-wrapper .portal-dot::after {
-  transition: opacity 1s ease;
+  transition: opacity 1.2s ease;
 }
 .portal-wrapper:not(:hover) .portal-dot::before,
 .portal-wrapper:not(:hover) .portal-dot::after {
   opacity: 0;
 }
 
-/* CTA text */
+/* CTA text above dot */
 .portal-cta {
-  color: #c7c7c7;
+  color: #b4b4b4;
   font-size: 0.9rem;
   letter-spacing: 0.025em;
   opacity: 0;
@@ -378,11 +377,12 @@ body {
   pointer-events: none;
 }
 .portal-cta strong {
-  color: #ffffff;
-  font-weight: 600;
+  color: #fff; /* bright and legible */
+  font-weight: 700;
+  letter-spacing: 0.015em;
 }
 
-/* Fade-in on hover, soft linger fade-out */
+/* Hover fade-in and smooth linger fade-out */
 .portal-wrapper:hover .portal-cta {
   opacity: 0.9;
   transform: translateY(0);
@@ -391,7 +391,7 @@ body {
   transition-delay: 0.6s;
 }
 
-/* Accessibility */
+/* Accessibility: reduced motion disables animation */
 @media (prefers-reduced-motion: reduce) {
   .portal-dot, .portal-cta {
     transition: none !important;
@@ -399,7 +399,7 @@ body {
   }
 }
 
-/* Mobile adjustments */
+/* Mobile tweaks */
 @media (max-width: 640px) {
   .portal-wrapper {
     bottom: 24px;
@@ -407,7 +407,7 @@ body {
     gap: 6px;
   }
   .portal-dot {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
   .portal-cta {
     font-size: 0.8rem;
