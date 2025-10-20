@@ -294,72 +294,80 @@ body {
   place-items: center;
   z-index: 1000;
   cursor: pointer;
+  overflow: visible;
 }
 
-/* ---- 1. The Black Core ---- */
+/* ---- 1. Black Core ---- */
 .singularity-core {
   position: absolute;
   width: 60%;
   height: 60%;
   background: #000;
   border-radius: 50%;
-  z-index: 3;
-  animation: subtleMorph 20s ease-in-out infinite;
+  z-index: 4;
+  animation: subtleMorph 22s ease-in-out infinite;
 }
 
-/* ---- 2. The Event Horizon (cooler light, thin glow) ---- */
+/* ---- 2. Thin Event Horizon ---- */
 .event-horizon {
   position: absolute;
   width: 75%;
   height: 75%;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 50%,
-    rgba(255,255,255,0.18) 20%,
-    rgba(120,180,255,0.16) 45%,
+    rgba(255,255,255,0.20) 25%,
+    rgba(120,180,255,0.15) 45%,
     rgba(0,0,0,0.9) 70%);
-  mix-blend-mode: screen;
   filter: blur(2px);
   opacity: 0.9;
   animation: shimmer 14s ease-in-out infinite;
-  z-index: 2;
+  mix-blend-mode: screen;
+  z-index: 3;
 }
 
-/* ---- 3. The Gravitational Field ---- */
-.gravitational-field {
+/* ---- 3. Swirling Accretion Fields ---- */
+.swirl-layer {
   position: absolute;
-  width: 88%;
-  height: 88%;
+  width: 86%;
+  height: 86%;
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    rgba(255,255,255,0.08),
-    rgba(160,200,255,0.1),
-    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.05),
+    rgba(140,200,255,0.12),
+    rgba(255,255,255,0.06),
     rgba(160,200,255,0.08),
-    rgba(255,255,255,0.02)
+    rgba(255,255,255,0.03)
   );
+  filter: blur(6px);
+  opacity: 0.22;
+  animation: swirl 80s linear infinite, parallaxDrift 120s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+.layer1 {
+  animation-duration: 80s, 120s;
+  opacity: 0.20;
+}
+.layer2 {
+  width: 90%;
+  height: 90%;
+  filter: blur(7px);
+  animation-duration: 110s, 150s;
   opacity: 0.15;
-  filter: blur(5px);
-  animation: slowRotate 80s linear infinite;
-  z-index: 1;
+  animation-direction: reverse, alternate;
 }
 
-/* ---- 4. Dissolving Outer Edge ---- */
-.singularity-portal::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at center,
-    rgba(255,255,255,0.0) 50%,
-    rgba(255,255,255,0.6) 100%);
-  mix-blend-mode: screen;
-  opacity: 0.25;
-  pointer-events: none;
-  z-index: 0;
+/* ---- 4. Parallax Drift ---- */
+@keyframes parallaxDrift {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  25%  { transform: translate(-1px, 0.5px) scale(1.005); }
+  50%  { transform: translate(0.8px, -0.6px) scale(0.998); }
+  75%  { transform: translate(1.2px, 0.8px) scale(1.004); }
+  100% { transform: translate(0px, 0px) scale(1); }
 }
 
-/* ---- Hover Enhancements ---- */
+/* ---- 5. Hover Interaction ---- */
 .singularity-portal:hover .event-horizon {
   filter: blur(4px) brightness(1.25);
   opacity: 1;
@@ -369,27 +377,27 @@ body {
   transform: scale(1.05);
   transition: transform 1s ease;
 }
-.singularity-portal:hover .gravitational-field {
-  opacity: 0.2;
-  filter: blur(4px) brightness(1.1);
-  transition: all 1s ease;
+.singularity-portal:hover .swirl-layer {
+  opacity: 0.3;
+  filter: blur(5px) brightness(1.2);
+  transition: all 1.2s ease;
 }
 
-/* ---- Keyframes ---- */
+/* ---- Animations ---- */
 @keyframes subtleMorph {
   0%,100% { border-radius: 50%; transform: scale(1); }
   50%     { border-radius: 49% 51% 50% 50% / 51% 49% 50% 50%; transform: scale(1.03); }
 }
 @keyframes shimmer {
-  0%,100% { opacity: .8; }
+  0%,100% { opacity: .85; }
   50% { opacity: 1; }
 }
-@keyframes slowRotate {
+@keyframes swirl {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
 
-/* ---- Reduced Motion ---- */
+/* ---- Accessibility ---- */
 @media (prefers-reduced-motion: reduce){
   .singularity-portal * { animation: none !important; transition: none !important; }
 }
