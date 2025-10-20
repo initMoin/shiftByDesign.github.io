@@ -288,16 +288,15 @@ body {
   position: fixed;
   bottom: 40px;
   right: 48px;
-  width: 100px;
-  height: 100px;
+  width: 90px;            /* total footprint */
+  height: 90px;
   display: grid;
   place-items: center;
   z-index: 1000;
   cursor: pointer;
-  overflow: visible;
 }
 
-/* — 1. The Black Core — */
+/* ---- Black Core ---- */
 .singularity-core {
   position: absolute;
   width: 60%;
@@ -308,68 +307,68 @@ body {
   animation: subtleMorph 20s ease-in-out infinite;
 }
 
-/* — 2. The Event Horizon (light bending) — */
+/* ---- Event Horizon (≈ 15–20 % larger than core) ---- */
 .event-horizon {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 75%;
+  height: 75%;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 50%,
-    rgba(255,255,255,0.25) 30%,
-    rgba(255,78,0,0.15) 45%,
+    rgba(255,255,255,0.20) 30%,
+    rgba(82,190,255,0.12) 45%,
     rgba(0,0,0,0.85) 70%);
   mix-blend-mode: screen;
   filter: blur(2px);
-  opacity: 0.9;
-  animation: shimmer 12s ease-in-out infinite;
+  opacity: .9;
+  animation: shimmer 14s ease-in-out infinite;
   z-index: 2;
 }
 
-/* — 3. The Gravitational Field — */
+/* ---- Tight Gravitational Field (barely beyond horizon) ---- */
 .gravitational-field {
   position: absolute;
-  width: 170%;
-  height: 170%;
+  width: 88%;
+  height: 88%;
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    rgba(255,255,255,0.02),
-    rgba(255,255,255,0.06),
-    rgba(255,255,255,0.02)
+    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.08),
+    rgba(255,255,255,0.04)
   );
   opacity: 0.15;
-  filter: blur(10px);
-  animation: slowRotate 90s linear infinite;
+  filter: blur(4px);
+  animation: slowRotate 70s linear infinite;
   z-index: 1;
 }
 
-/* — 4. Subtle Vignette — */
+/* ---- Localized Vignette (tight focus) ---- */
 .singularity-portal::before {
   content: "";
   position: absolute;
-  inset: -50%;
+  inset: 0;
   border-radius: 50%;
   background: radial-gradient(circle at center,
-    rgba(0,0,0,0.0) 40%,
-    rgba(0,0,0,0.6) 90%);
+    rgba(0,0,0,0.0) 45%,
+    rgba(0,0,0,0.6) 95%);
   z-index: 0;
 }
 
-/* Hover Effects — increases horizon brightness, slight scale pulse */
+/* ---- Hover Interactions ---- */
 .singularity-portal:hover .event-horizon {
   filter: blur(4px) brightness(1.2);
   opacity: 1;
   transition: filter 1s ease, opacity 1s ease;
 }
 .singularity-portal:hover .singularity-core {
-  transform: scale(1.06);
+  transform: scale(1.05);
   transition: transform 1s ease;
 }
 
-/* Keyframes */
+/* ---- Animations ---- */
 @keyframes subtleMorph {
   0%,100% { border-radius: 50%; transform: scale(1); }
-  50% { border-radius: 49% 51% 50% 50% / 51% 49% 50% 50%; transform: scale(1.03); }
+  50%     { border-radius: 49% 51% 50% 50% / 51% 49% 50% 50%; transform: scale(1.03); }
 }
 @keyframes shimmer {
   0%,100% { opacity: .8; }
@@ -377,10 +376,10 @@ body {
 }
 @keyframes slowRotate {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to   { transform: rotate(360deg); }
 }
 
-/* Accessibility */
+/* ---- Accessibility ---- */
 @media (prefers-reduced-motion: reduce){
   .singularity-portal * { animation: none !important; transition: none !important; }
 }
