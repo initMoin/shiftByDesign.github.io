@@ -283,123 +283,149 @@ body {
   }
 }
 
-/* ------------------------------------
-   FORGE PORTAL DOT — BYDESIGN ENTRY
-   ------------------------------------ */
-.portal-wrapper {
+/* ======== SHIFT PORTAL (NAMESPACE) ======== */
+:root {
+  --forge:#ff4e00;
+  --blue:#52beff;
+}
+
+/* Wrapper: fixed in the corner, CTA above the dot */
+.shift-portal {
   position: fixed;
   bottom: 36px;
   right: 44px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column;     /* CTA above core */
   align-items: center;
   gap: 8px;
   z-index: 1000;
   user-select: none;
+  pointer-events: auto;
 }
 
-/* Outer link area for proper centering */
-.portal-core {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 50%;
-  position: relative;
-  text-decoration: none;
-  transition: transform .5s ease;
-}
-
-/* Inner dot */
-.portal-dot {
-  font-size: 2.6rem;
-  color: #ff4e00;
-  opacity: 0.9;
-  text-shadow: 0 0 8px rgba(255,78,0,.5);
-  transition: transform .6s ease, text-shadow .6s ease;
-}
-
-.portal-core:hover .portal-dot {
-  transform: scale(1.12);
-  text-shadow: 0 0 16px rgba(255,78,0,.8);
-}
-
-/* Electric arcs — not perfect circles, now orbiting flickers */
-.portal-core::before,
-.portal-core::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  opacity: 0;
-  width: 140%;
-  height: 140%;
-  border: 2px solid rgba(255,78,0,0.2);
-  filter: blur(3px);
-}
-
-.portal-core::before {
-  border-top-color: rgba(255,78,0,0.7);
-  border-right-color: transparent;
-  border-bottom-color: rgba(255,78,0,0.4);
-  border-left-color: transparent;
-  animation: electricArcA 2.8s infinite ease-in-out alternate;
-}
-
-.portal-core::after {
-  border-top-color: transparent;
-  border-right-color: rgba(255,78,0,0.5);
-  border-bottom-color: transparent;
-  border-left-color: rgba(255,78,0,0.3);
-  animation: electricArcB 3.1s infinite ease-in-out alternate;
-}
-
-.portal-core:hover::before,
-.portal-core:hover::after {
-  opacity: 1;
-}
-
-/* Arc motion for irregular rotation */
-@keyframes electricArcA {
-  0%,100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-  50% { transform: translate(-50%, -50%) rotate(12deg) scale(1.08); }
-}
-
-@keyframes electricArcB {
-  0%,100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-  50% { transform: translate(-50%, -50%) rotate(-14deg) scale(1.1); }
-}
-
-/* CTA Text */
-.portal-cta {
-  color: #b4b4b4;
-  font-size: 0.9rem;
-  letter-spacing: 0.025em;
-  opacity: 0;
+/* CTA */
+.shift-portal__cta{
+  color:#b4b4b4;
+  font-size:.9rem;
+  letter-spacing:.025em;
+  opacity:0;
   transform: translateY(6px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  pointer-events: none;
+  transition: opacity .6s ease, transform .6s ease;
+  pointer-events:none;
 }
-.portal-cta strong {
-  color: #ff4e00;
-  font-weight: 700;
-  letter-spacing: 0.015em;
+.shift-portal__cta strong{
+  color: var(--forge);
+  font-weight:700;
+  letter-spacing:.015em;
   text-shadow: 0 0 4px rgba(255,78,0,.6), 0 0 8px rgba(255,78,0,.4);
 }
 
-.portal-wrapper:hover .portal-cta {
-  opacity: 0.9;
-  transform: translateY(0);
+/* Core: exact centering box so pseudo-elements align perfectly */
+.shift-portal__core{
+  width: 3.2rem;
+  height:3.2rem;
+  position: relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  transform: translateZ(0);
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .portal-wrapper { bottom: 24px; right: 28px; }
-  .portal-core { width: 2.2rem; height: 2.2rem; }
-  .portal-dot { font-size: 1.8rem; }
-  .portal-cta { font-size: 0.8rem; }
+/* Dot */
+.shift-portal__dot{
+  font-size:3rem;            /* big and intentional */
+  line-height:1;
+  color: var(--forge);
+  opacity:.9;
+  text-shadow: 0 0 8px rgba(255,78,0,.5);
+  transition: transform .6s ease, text-shadow .6s ease, opacity .6s ease;
+}
+
+/* GLOW RING (soft radial halo) — behind the dot */
+.shift-portal__core::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  margin:auto;
+  width: 140%;
+  height:140%;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+  transform: scale(.9);
+  background: radial-gradient(circle,
+              rgba(255,78,0,.35) 0%,
+              rgba(255,78,0,.15) 45%,
+              rgba(255,78,0,0) 70%);
+  filter: blur(4px);
+  transition: opacity .8s ease, transform .8s ease;
+  z-index: -1;
+}
+
+/* ELECTRIC ARCS — irregular orbit using segmented borders */
+.shift-portal__core::after{
+  content:"";
+  position:absolute;
+  top:50%; left:50%;
+  width:145%;
+  height:145%;
+  transform: translate(-50%,-50%);
+  pointer-events:none;
+  border-radius:50%;
+  opacity:0;
+  /* two opposing arcs: show only top/right and bottom/left with different strengths */
+  border:2px solid transparent;
+  border-top-color: rgba(255,78,0,.7);
+  border-right-color: rgba(255,78,0,.45);
+  border-bottom-color: rgba(255,78,0,.35);
+  border-left-color: rgba(255,78,0,.15);
+  filter: blur(2px);
+  transition: opacity 1.1s ease;
+  animation: shiftPortalArcSpin 3s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+/* Hover states (wrapper hover = both CTA and core react) */
+.shift-portal:hover .shift-portal__cta{
+  opacity:.9;
+  transform: translateY(0);
+}
+.shift-portal:hover .shift-portal__dot{
+  opacity:1;
+  transform: scale(1.12);
+  text-shadow: 0 0 16px rgba(255,78,0,.85);
+}
+.shift-portal:hover .shift-portal__core::before{
+  opacity:1;
+  transform: scale(1);
+}
+.shift-portal:hover .shift-portal__core::after{
+  opacity:.9;
+}
+
+/* Arc motion — slight irregular rotation to feel alive, not clock-like */
+@keyframes shiftPortalArcSpin{
+  0%   { transform: translate(-50%,-50%) rotate(0deg)     scale(1.00); }
+  40%  { transform: translate(-50%,-50%) rotate(9deg)     scale(1.05); }
+  60%  { transform: translate(-50%,-50%) rotate(-6deg)    scale(1.08); }
+  100% { transform: translate(-50%,-50%) rotate(12deg)    scale(1.03); }
+}
+
+/* Gentle linger on mouseout */
+.shift-portal:not(:hover) .shift-portal__core::after { transition-delay: .2s; }
+.shift-portal:not(:hover) .shift-portal__core::before{ transition-delay: .2s; }
+.shift-portal:not(:hover) .shift-portal__cta         { transition-delay: .4s; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .shift-portal * { animation: none !important; transition: none !important; }
+}
+
+/* Mobile */
+@media (max-width:640px){
+  .shift-portal{ bottom:24px; right:28px; gap:6px; }
+  .shift-portal__core{ width:2.4rem; height:2.4rem; }
+  .shift-portal__dot{ font-size:2.2rem; }
+  .shift-portal__cta{ font-size:.82rem; }
 }
