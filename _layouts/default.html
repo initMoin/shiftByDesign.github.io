@@ -166,25 +166,7 @@
       });
     })();
   </script>
-  <!-- THE SINGULARITY PORTAL -->
-<div class="singularity-portal">
-  <div class="singularity-core"></div>
-  <canvas id="swirlField"></canvas>
-</div>
-  <script>
-/* Fade-out navigation (respect reduced motion) */
-(() => {
-  const link = document.querySelector('.shift-portal.shift-portal--forge .shift-portal__core');
-  if (!link) return;
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.body.style.transition = 'opacity 0.6s ease';
-      document.body.style.opacity = '0';
-      setTimeout(() => window.location = link.getAttribute('href'), 600);
-    });
-  }
-})();
-</script>
+  <!-- === INTERSTELLAR SINGULARITY PORTAL =============================== -->
+<div id="singularityPortal" aria-hidden="false"></div>
 </body>
 </html>
