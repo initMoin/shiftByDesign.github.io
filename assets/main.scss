@@ -284,258 +284,75 @@ body {
 }
 
 /* ======== SHIFT PORTAL (NAMESPACE) ======== */
-/* Position bottom-right, similar footprint to your dot */
-  #singularityPortal {
-    position: fixed;
-    bottom: 40px;
-    right: 48px;
-    width: 112px;   /* tweak to taste */
-    height: 112px;
-    z-index: 1000;
-    cursor: pointer;
-    border-radius: 50%;
-    overflow: visible;   /* we let subtle glow breathe */
-  }
+.blackhole {
+  position: relative;
+  width: 140px;               /* black-hole diameter */
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #000;
+  overflow: visible;
+  isolation: isolate;
+  cursor: pointer;
+}
 
-  /* Smooth hover focus ring (very faint) */
-  #singularityPortal::after {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(82,190,255,0.18);
-    transition: box-shadow .9s ease;
-    pointer-events: none;
-  }
-  #singularityPortal:hover::after {
-    box-shadow: 0 0 0 8px rgba(82,190,255,0.12);
-  }
+/* — Halo — */
+.blackhole::before {
+  content: "";
+  position: absolute;
+  inset: -160%;               /* extends ~2.5× radius */
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,0.9) 0%,
+    rgba(255,200,60,0.85) 20%,
+    rgba(255,120,0,0.65) 45%,
+    rgba(150,70,0,0.35) 70%,
+    rgba(20,10,0,0) 100%
+  );
+  animation: swirl 20s linear infinite;
+  filter: blur(20px) saturate(1.2);
+  z-index: -1;
+  transform-origin: center;
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    #singularityPortal::after { transition: none !important; }
-  }
+/* — Texture / turbulence overlay — */
+.blackhole::after {
+  content: "";
+  position: absolute;
+  inset: -160%;
+  border-radius: 50%;
+  background: radial-gradient(
+      circle,
+      rgba(255,255,255,0.05) 0%,
+      rgba(255,120,0,0.04) 40%,
+      rgba(0,0,0,0) 90%
+    );
+  mix-blend-mode: screen;
+  filter: blur(12px) contrast(1.2);
+  animation: noiseFlow 12s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+/* — Animations — */
+@keyframes swirl {
+  from { transform: rotate(0deg) scale(1); }
+  to   { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes noiseFlow {
+  0%,100% { transform: rotate(0deg) scale(1); }
+  50%     { transform: rotate(15deg) scale(1.05); }
+}
+
+/* — Hover breathing — */
+.blackhole:hover::before {
+  filter: blur(25px) brightness(1.2) saturate(1.4);
+  transition: filter 1.5s ease;
+}
+.blackhole:hover::after {
+  animation-duration: 8s;
+}
 </style>
 
-<!-- Three.js (CDN) -->
-<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-
-<script>
-(() => {
-  const el = document.getElementById('singularityPortal');
-  if (!el || !window.THREE) return;
-
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // --- Renderer / Scene / Camera ------------------------------------------------
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(el.clientWidth, el.clientHeight, false);
-  renderer.domElement.style.borderRadius = '50%';
-  renderer.domElement.style.display = 'block';
-  el.appendChild(renderer.domElement);
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-  // --- Geometry: full-quad ------------------------------------------------------
-  const geo = new THREE.PlaneGeometry(2, 2);
-
-  // --- Shader material ----------------------------------------------------------
-  // Interstellar-inspired lensing:
-  // - Tight Schwarzschild radius r_s for the black core (completely black).
-  // - Accretion brightness ring with swirl (angle sheared by time & 1/r term).
-  // - Chromatic aberration by sampling RGB at slightly different radii/angles.
-  // - Outer field dissolves to transparent so it blends with the page.
-  const mat = new THREE.ShaderMaterial({
-    transparent: true,
-    uniforms: {
-      u_time:     { value: 0.0 },
-      u_boost:    { value: 0.0 },     // 0..1 hover energy
-      u_res:      { value: new THREE.Vector2(el.clientWidth, el.clientHeight) },
-      u_parallax: { value: new THREE.Vector2(0.0, 0.0) }, // tiny drift
-      u_strength: { value: 1.0 },     // overall intensity
-      u_blueBias: { value: 1.0 },     // lean cooler blues
-    },
-    vertexShader: `
-      varying vec2 vUv;
-      void main(){
-        vUv = uv;
-        gl_Position = vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      precision highp float;
-      varying vec2 vUv;
-
-      uniform vec2  u_res;
-      uniform vec2  u_parallax;
-      uniform float u_time;
-      uniform float u_boost;
-      uniform float u_strength;
-      uniform float u_blueBias;
-
-      // quick hash
-      float hash(float n){ return fract(sin(n)*43758.5453123); }
-      // simple noise-ish function
-      float n2(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
-
-      // soft ring
-      float ring(float r, float r0, float w){
-        float d = abs(r - r0);
-        return exp(- (d*d) / (2.0*w*w));
-      }
-
-      // palette for the accretion disk (bluish white with slight orange flares)
-      vec3 accretionColor(float t){
-        // cool base
-        vec3 c1 = vec3(0.75, 0.86, 1.0);
-        vec3 c2 = vec3(0.95, 0.98, 1.0);
-        // occasional warmer micro-flare
-        float flare = smoothstep(0.85, 1.0, sin(t)*0.5 + 0.5);
-        vec3 warm = vec3(1.0, 0.55, 0.25) * 0.35;
-        return mix(c1, c2, 0.6) + warm * flare * 0.25;
-      }
-
-      void main(){
-        // Normalize to centered space with aspect correction & parallax drift
-        vec2 uv = vUv;
-        vec2 aspect = vec2(u_res.x / max(u_res.y,1.0), u_res.y / max(u_res.x,1.0));
-        vec2 p = (uv - 0.5) * vec2(aspect.x, 1.0);
-        p += u_parallax * 0.01; // tiny drift
-
-        // Polar coords
-        float r = length(p);
-        float a = atan(p.y, p.x);
-
-        // Parameters
-        float rs = 0.28;                      // Schwarzschild radius (black core)
-        float diskR = rs + 0.09;              // accretion ring median radius
-        float diskW = 0.08 + u_boost*0.02;    // ring width grows a hair on hover
-
-        // Swirl: shear the angle using time and an inverse radial term
-        float swirl = u_time*0.35 + 0.22/(r+0.001);
-        float band = ring(r, diskR, diskW);
-
-        // Add noisy striations so it looks like flowing plasma
-        float lanes = 0.6 + 0.4 * sin(14.0*a + swirl*4.0);
-        float streaks = 0.5 + 0.5 * sin( (a*36.0) + u_time*2.0 + n2(p*24.0)*3.14159 );
-        float disk = band * lanes * (0.7 + 0.3*streaks);
-
-        // Chromatic aberration: sample disk at offset radii for RGB
-        float ca = mix(0.003, 0.008, u_boost);
-        float rR = r + ca*0.6;
-        float rG = r;
-        float rB = r - ca*0.6;
-
-        float diskRch = ring(rR, diskR, diskW) * lanes;
-        float diskGch = ring(rG, diskR, diskW) * lanes;
-        float diskBch = ring(rB, diskR, diskW) * lanes;
-
-        vec3 colDisk = accretionColor(u_time + a*0.5);
-        // bias cooler
-        colDisk = mix(colDisk, vec3(0.78,0.88,1.0), clamp(u_blueBias,0.0,1.0));
-
-        vec3 col =
-          vec3(diskRch, 0.0, 0.0) +
-          vec3(0.0, diskGch, 0.0) +
-          vec3(0.0, 0.0, diskBch);
-
-        col *= colDisk;
-
-        // Thin lensing ring close to the event horizon
-        float horizon = ring(r, rs+0.02, 0.015) * 0.85;
-        vec3 horizonCol = mix(vec3(0.9,0.95,1.0), vec3(0.6,0.8,1.0), 0.35);
-        col += horizonCol * horizon;
-
-        // Outer dissolve into page
-        float falloff = smoothstep(0.55, 0.40, r); // fade out after ~0.4..0.55
-        col *= falloff;
-
-        // Black core: hard cut inside rs
-        if (r < rs) {
-          gl_FragColor = vec4(0.0,0.0,0.0,1.0);
-          return;
-        }
-
-        // Final boost & alpha
-        float alpha = clamp(falloff, 0.0, 1.0);
-        col *= (0.85 + 0.35*u_boost) * u_strength;
-
-        gl_FragColor = vec4(col, alpha);
-      }
-    `
-  });
-
-  const mesh = new THREE.Mesh(geo, mat);
-  scene.add(mesh);
-
-  // --- Hover easing -------------------------------------------------------------
-  let boost = 0;          // 0..1
-  let parallax = {x:0, y:0};
-  let t0 = performance.now();
-
-  function easeTowards(current, target, rate){
-    return current + (target - current) * rate;
-  }
-
-  // hover in/out
-  let isHover = false;
-  el.addEventListener('mouseenter', () => { isHover = true; });
-  el.addEventListener('mouseleave', () => { isHover = false; });
-
-  // tiny parallax drift loop (slow oscillation)
-  function updateParallax(time){
-    // stronger when boosted
-    const amp = isHover ? 0.7 : 0.35;
-    parallax.x = Math.sin(time*0.0007) * amp;
-    parallax.y = Math.cos(time*0.0009) * amp;
-  }
-
-  // maintain proper resolution uniform (also on resize)
-  function setSize(){
-    const w = el.clientWidth;
-    const h = el.clientHeight;
-    renderer.setSize(w, h, false);
-    mat.uniforms.u_res.value.set(w, h);
-  }
-  const ro = new ResizeObserver(setSize);
-  ro.observe(el);
-
-  // --- Animation loop -----------------------------------------------------------
-  function raf(now){
-    const dt = now - t0; t0 = now;
-
-    // time
-    mat.uniforms.u_time.value = now * (prefersReduced ? 0.0002 : 0.001);
-
-    // hover easing (smooth in/out)
-    const targetBoost = isHover ? 1.0 : 0.0;
-    boost = easeTowards(boost, targetBoost, prefersReduced ? 0.1 : 0.07);
-    mat.uniforms.u_boost.value = boost;
-
-    // parallax drift
-    updateParallax(now);
-    // soften parallax at rest
-    const px = parallax.x * (0.15 + 0.85*boost);
-    const py = parallax.y * (0.15 + 0.85*boost);
-    mat.uniforms.u_parallax.value.set(px, py);
-
-    renderer.render(scene, camera);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-
-  // Safety: fade-out navigation if you want click-through
-  el.addEventListener('click', (e) => {
-    // Example: navigate to /shift.html (uncomment if desired)
-    // e.preventDefault();
-    // document.body.style.transition = 'opacity 0.6s ease';
-    // document.body.style.opacity = '0';
-    // setTimeout(() => window.location = '/shift.html', 600);
-  });
-
-})();
-</script>
-<!-- === /INTERSTELLAR SINGULARITY PORTAL ===================================== -->
 
 
