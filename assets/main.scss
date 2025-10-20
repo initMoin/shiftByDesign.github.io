@@ -284,7 +284,7 @@ body {
 }
 
 /* ----------------------------
-   SHIFT PORTAL DOT + CTA
+   SHIFT PORTAL DOT + CTA (Refined)
    ---------------------------- */
 
 .portal-wrapper {
@@ -292,12 +292,14 @@ body {
   bottom: 36px;
   right: 44px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* CTA now above the dot */
   align-items: center;
+  gap: 8px;
   z-index: 1000;
   user-select: none;
 }
 
+/* Portal dot */
 .portal-dot {
   font-size: 1.9rem;
   color: #ff4e00;
@@ -305,7 +307,6 @@ body {
   opacity: 0.7;
   transition: opacity .4s ease, transform .4s ease, text-shadow .6s ease;
 }
-
 .portal-dot:hover {
   opacity: 1;
   transform: scale(1.25);
@@ -316,19 +317,25 @@ body {
 .portal-cta {
   color: #b4b4b4;
   font-size: 0.9rem;
+  font-weight: 500;
   letter-spacing: 0.02em;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
 }
+.portal-cta strong {
+  color: #e8e8e8;
+  font-weight: 600; /* visually bolder than regular text */
+}
 
+/* Hover behavior */
 .portal-wrapper:hover .portal-cta {
-  opacity: 0.8;
+  opacity: 0.85;
   transform: translateY(0);
 }
 
-/* Hover pulse animation */
+/* Pulse effect on click */
 @keyframes portalPulse {
   0% { text-shadow: 0 0 0 rgba(255,78,0,.8); transform: scale(1); }
   50% { text-shadow: 0 0 20px rgba(255,78,0,1); transform: scale(1.35); }
@@ -338,7 +345,7 @@ body {
   animation: portalPulse 0.6s ease;
 }
 
-/* Accessibility */
+/* Accessibility: no motion for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
   .portal-dot, .portal-cta {
     transition: none !important;
@@ -348,7 +355,15 @@ body {
 
 /* Mobile adjustments */
 @media (max-width: 640px) {
-  .portal-wrapper { bottom: 24px; right: 28px; }
-  .portal-dot { font-size: 1.6rem; }
-  .portal-cta { font-size: 0.8rem; }
+  .portal-wrapper {
+    bottom: 24px;
+    right: 28px;
+    gap: 6px;
+  }
+  .portal-dot {
+    font-size: 1.6rem;
+  }
+  .portal-cta {
+    font-size: 0.8rem;
+  }
 }
