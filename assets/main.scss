@@ -284,13 +284,12 @@ body {
 }
 
 /* ======== SHIFT PORTAL (NAMESPACE) ======== */
-/* Root setup */
 .singularity-portal {
   position: fixed;
   bottom: 40px;
   right: 48px;
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   display: grid;
   place-items: center;
   z-index: 1000;
@@ -298,100 +297,91 @@ body {
   overflow: visible;
 }
 
-/* Core black hole (the true singularity) */
+/* — 1. The Black Core — */
 .singularity-core {
   position: absolute;
-  width: 58%;
-  height: 58%;
-  background: radial-gradient(circle at 48% 52%, #000 0%, #050505 90%);
+  width: 60%;
+  height: 60%;
+  background: #000;
   border-radius: 50%;
-  animation: coreMorph 20s ease-in-out infinite;
   z-index: 3;
+  animation: subtleMorph 20s ease-in-out infinite;
 }
 
-/* Event horizon ring */
+/* — 2. The Event Horizon (light bending) — */
 .event-horizon {
   position: absolute;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 50%,
-    rgba(255,255,255,0.18) 20%,
-    rgba(120,160,255,0.10) 40%,
-    rgba(0,0,0,0.85) 80%);
-  filter: blur(6px);
+    rgba(255,255,255,0.25) 30%,
+    rgba(255,78,0,0.15) 45%,
+    rgba(0,0,0,0.85) 70%);
+  mix-blend-mode: screen;
+  filter: blur(2px);
   opacity: 0.9;
-  animation: horizonPulse 10s ease-in-out infinite;
+  animation: shimmer 12s ease-in-out infinite;
   z-index: 2;
 }
 
-/* Accretion swirl field */
-.singularity-field {
+/* — 3. The Gravitational Field — */
+.gravitational-field {
   position: absolute;
-  width: 180%;
-  height: 180%;
+  width: 170%;
+  height: 170%;
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    rgba(255,255,255,0.05),
-    rgba(82,190,255,0.12),
-    rgba(255,78,0,0.08),
-    rgba(0,0,0,0.9),
-    rgba(255,255,255,0.05)
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.06),
+    rgba(255,255,255,0.02)
   );
-  filter: blur(16px) brightness(1.2);
-  opacity: 0.45;
-  animation: swirlRotate 80s linear infinite;
-  mask: radial-gradient(circle at center, black 40%, transparent 75%);
+  opacity: 0.15;
+  filter: blur(10px);
+  animation: slowRotate 90s linear infinite;
   z-index: 1;
 }
 
-/* Outer vignette for depth */
+/* — 4. Subtle Vignette — */
 .singularity-portal::before {
   content: "";
   position: absolute;
   inset: -50%;
   border-radius: 50%;
   background: radial-gradient(circle at center,
-      rgba(0,0,0,0) 40%,
-      rgba(0,0,0,0.4) 90%);
+    rgba(0,0,0,0.0) 40%,
+    rgba(0,0,0,0.6) 90%);
   z-index: 0;
 }
 
-/* Hover interactivity */
-.singularity-portal:hover .singularity-field {
-  opacity: 0.6;
-  filter: blur(14px) brightness(1.4);
-  animation-duration: 40s;
-  transition: all 2s ease;
-}
+/* Hover Effects — increases horizon brightness, slight scale pulse */
 .singularity-portal:hover .event-horizon {
-  filter: blur(8px) brightness(1.4);
-  transition: filter 1.5s ease;
+  filter: blur(4px) brightness(1.2);
+  opacity: 1;
+  transition: filter 1s ease, opacity 1s ease;
 }
 .singularity-portal:hover .singularity-core {
-  transform: scale(1.08);
-  transition: transform 1.2s ease;
+  transform: scale(1.06);
+  transition: transform 1s ease;
 }
 
 /* Keyframes */
-@keyframes coreMorph {
+@keyframes subtleMorph {
   0%,100% { border-radius: 50%; transform: scale(1); }
-  50% { border-radius: 48% 52% 50% 50% / 52% 48% 50% 50%; transform: scale(1.04); }
+  50% { border-radius: 49% 51% 50% 50% / 51% 49% 50% 50%; transform: scale(1.03); }
 }
-
-@keyframes horizonPulse {
-  0%,100% { opacity: .85; filter: blur(4px) brightness(1); }
-  50% { opacity: 1; filter: blur(7px) brightness(1.3); }
+@keyframes shimmer {
+  0%,100% { opacity: .8; }
+  50% { opacity: 1; }
 }
-
-@keyframes swirlRotate {
+@keyframes slowRotate {
   from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* reduced motion */
-@media (prefers-reduced-motion: reduce) {
+/* Accessibility */
+@media (prefers-reduced-motion: reduce){
   .singularity-portal * { animation: none !important; transition: none !important; }
 }
 
