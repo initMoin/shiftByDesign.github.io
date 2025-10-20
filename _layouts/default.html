@@ -166,5 +166,23 @@
       });
     })();
   </script>
+  <!-- shift portal -->
+<a href="/shift.html" class="portal-dot" aria-label="Enter the Singularity">•</a>
+  <script>
+(() => {
+  const dot = document.querySelector('.portal-dot');
+  if (!dot) return;
+
+  // Smooth fade-out transition before navigating to shift.html
+  dot.addEventListener('click', e => {
+    // Respect reduced motion preferences
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    document.body.style.transition = 'opacity 0.6s ease';
+    document.body.style.opacity = '0';
+    setTimeout(() => window.location = dot.href, 600);
+  });
+})();
+</script>
 </body>
 </html>
