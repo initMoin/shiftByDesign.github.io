@@ -283,73 +283,93 @@ body {
   }
 }
 
-/* ======== SHIFT PORTAL (NAMESPACE) ======== */
-.singularity {
-  position: relative;
-  width: 300px;
-  height: 300px;
+/* ===== byDesign: corner Singularity ===== */
+.bd-singularity {
+  position: fixed;
+  top: 1.25rem;   /* 20px */
+  left: 1.25rem;
+  z-index: 60;    /* above brand block & socials */
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: .5rem;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Hover/focus target is the whole block */
+  &:hover .cta,
+  &:focus-within .cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* CTA: small, clean, brand-aligned */
+.bd-singularity .cta {
+  justify-self: start;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0 0 .125rem 0;
+  cursor: pointer;
+
+  /* Typographic match: small but readable; lighter pre, heavier mark */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.1;
+  letter-spacing: .04em;
+  text-transform: none;
+
+  /* Size chosen to match your earlier smaller byDesign size */
+  font-size: .95rem;  /* tweak to .9/.92 if you want it even smaller */
+  color: #000;
+
+  /* Fade in from slightly below */
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .28s ease, transform .28s ease;
+
+  .pre  { font-weight: 450; opacity: .85; } /* “enter the” — lighter */
+  .mark { font-weight: 700; }               /* “Singularity” — heavier */
+
+  &:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+}
+
+/* SVG sizing/scale so it fits the byDesign canvas without scrolling */
+.bd-singularity .svg-wrap {
+  width: 220px;    /* desktop base size */
+  height: 220px;
   display: grid;
   place-items: center;
-  overflow: visible;
+  contain: layout paint;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* Ensure pointer hover covers svg for CTA reveal */
+    pointer-events: auto;
+  }
 }
 
-/* Core */
-.core {
-  fill: var(--core);
-  filter: var(--core-filter);
+/* Optional: slightly subtler at rest; crisper on hover */
+.bd-singularity:hover .svg-wrap,
+.bd-singularity:focus-within .svg-wrap {
+  filter: none; /* keep it clean on hover */
 }
 
-/* Swirls */
-.swirls path {
-  fill: none;
-  stroke: var(--swirl-1);
-  stroke-width: 4;
-  opacity: 0.8;
-  filter: var(--swirl-filter);
-  transform-origin: 200px 200px;
-  animation: swirl-rotate var(--swirl-speed) linear infinite;
+/* Responsive trims to keep it proportional across breakpoints */
+@media (max-width: 1024px) {
+  .bd-singularity { top: 1rem; left: 1rem; }
+  .bd-singularity .svg-wrap { width: 200px; height: 200px; }
+  .bd-singularity .cta { font-size: .92rem; }
 }
-
-/* Second set (every 2nd path lighter) */
-.swirls path:nth-child(2n) {
-  stroke: var(--swirl-2);
-  stroke-width: 3;
-  opacity: 0.6;
+@media (max-width: 640px) {
+  .bd-singularity { top: .75rem; left: .75rem; }
+  .bd-singularity .svg-wrap { width: 168px; height: 168px; }
+  .bd-singularity .cta { font-size: .88rem; }
 }
-
-/* Animation */
-@keyframes swirl-rotate { to { transform: rotate(360deg); } }
-
-/* Flicker pulse (dark mode only) */
-@keyframes flicker {
-  0%,100% { opacity: 0.95; }
-  50%     { opacity: 0.85; }
-}
-
-/* === THEME VARIABLES === */
-[data-theme="dark"] {
-  --core: #000;
-  --core-filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
-  --swirl-1: #ffffff;
-  --swirl-2: #a3c7ff;
-  --swirl-filter: drop-shadow(0 0 12px rgba(82,190,255,0.35));
-  --swirl-speed: 220s;
-}
-[data-theme="light"] {
-  --core: #000;
-  --core-filter: drop-shadow(0 0 6px rgba(0,0,0,0.2));
-  --swirl-1: #000000;
-  --swirl-2: #6b6058;
-  --swirl-filter: drop-shadow(0 0 5px rgba(0,0,0,0.25));
-  --swirl-speed: 220s reverse;
-}
-
-/* Hover effect */
-.singularity:hover .swirls path {
-  animation-duration: 120s;
-  filter: brightness(1.15) var(--swirl-filter);
-}
-</style>
 
 
 
