@@ -283,15 +283,15 @@ body {
   }
 }
 
-/* ===== byDesign: corner Singularity ===== */
+/* ===== Singularity below brand ===== */
 .bd-singularity {
   position: fixed;
-  top: 1.25rem;     /* below logo stack */
-  left: 1.25rem;
+  top: 5.5rem; /* positions just below your tagline */
+  left: 1.5rem;
   z-index: 60;
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: .5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
@@ -302,24 +302,19 @@ body {
   }
 }
 
-/* CTA styling */
+/* CTA */
 .bd-singularity .cta {
-  justify-self: start;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  margin: 0 0 .125rem 0;
-  cursor: pointer;
+  margin-bottom: 0.25rem;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
   line-height: 1.1;
-  letter-spacing: .04em;
-  font-size: .95rem;
   color: #000;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity .28s ease, transform .28s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 
-  .pre  { font-weight: 450; opacity: .85; }
+  .pre  { font-weight: 450; opacity: 0.8; }
   .mark { font-weight: 700; }
 
   &:focus-visible {
@@ -328,38 +323,28 @@ body {
   }
 }
 
-/* SVG scale and containment */
+/* Keep same proportions as your standalone test */
 .bd-singularity .svg-wrap {
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   display: grid;
   place-items: center;
-  contain: layout paint;
-
-  svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: auto;
-  }
 }
 
-.bd-singularity:hover .svg-wrap,
-.bd-singularity:focus-within .svg-wrap {
-  filter: none;
+.bd-singularity .svg-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
 }
 
-/* Responsive scaling */
 @media (max-width: 1024px) {
-  .bd-singularity { top: 1rem; left: 1rem; }
-  .bd-singularity .svg-wrap { width: 200px; height: 200px; }
-  .bd-singularity .cta { font-size: .92rem; }
+  .bd-singularity .svg-wrap { width: 210px; height: 210px; }
 }
 
 @media (max-width: 640px) {
-  .bd-singularity { top: .75rem; left: .75rem; }
-  .bd-singularity .svg-wrap { width: 168px; height: 168px; }
-  .bd-singularity .cta { font-size: .88rem; }
+  .bd-singularity .svg-wrap { width: 180px; height: 180px; }
+  .bd-singularity .cta { font-size: 0.9rem; }
 }
 </style>
 
