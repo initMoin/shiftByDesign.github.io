@@ -284,38 +284,70 @@ body {
 }
 
 /* ======== SHIFT PORTAL (NAMESPACE) ======== */
-#blackhole {
-  cursor: pointer;
-  display: block;
-  margin: auto;
-  filter: drop-shadow(0 0 6px rgba(0,0,0,0.15));
-  transition: transform 2.5s ease, filter 1.2s ease;
+.singularity {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: grid;
+  place-items: center;
+  overflow: visible;
 }
 
-/* Subtle "gravitational pulse" animation */
-#blackhole:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 12px rgba(0,0,0,0.25));
+/* Core */
+.core {
+  fill: var(--core);
+  filter: var(--core-filter);
 }
 
-#blackhole #swirls path {
+/* Swirls */
+.swirls path {
+  fill: none;
+  stroke: var(--swirl-1);
+  stroke-width: 4;
+  opacity: 0.8;
+  filter: var(--swirl-filter);
   transform-origin: 200px 200px;
-  animation: drift 18s linear infinite;
+  animation: swirl-rotate var(--swirl-speed) linear infinite;
 }
 
-#blackhole:hover #swirls path {
-  animation-duration: 12s;
-  stroke-opacity: 0.7;
+/* Second set (every 2nd path lighter) */
+.swirls path:nth-child(2n) {
+  stroke: var(--swirl-2);
+  stroke-width: 3;
+  opacity: 0.6;
 }
 
-@keyframes drift {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+/* Animation */
+@keyframes swirl-rotate { to { transform: rotate(360deg); } }
+
+/* Flicker pulse (dark mode only) */
+@keyframes flicker {
+  0%,100% { opacity: 0.95; }
+  50%     { opacity: 0.85; }
 }
 
-/* Fade edges outward on white */
-#blackhole use {
-  opacity: 0.9;
+/* === THEME VARIABLES === */
+[data-theme="dark"] {
+  --core: #000;
+  --core-filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+  --swirl-1: #ffffff;
+  --swirl-2: #a3c7ff;
+  --swirl-filter: drop-shadow(0 0 12px rgba(82,190,255,0.35));
+  --swirl-speed: 220s;
+}
+[data-theme="light"] {
+  --core: #000;
+  --core-filter: drop-shadow(0 0 6px rgba(0,0,0,0.2));
+  --swirl-1: #000000;
+  --swirl-2: #6b6058;
+  --swirl-filter: drop-shadow(0 0 5px rgba(0,0,0,0.25));
+  --swirl-speed: 220s reverse;
+}
+
+/* Hover effect */
+.singularity:hover .swirls path {
+  animation-duration: 120s;
+  filter: brightness(1.15) var(--swirl-filter);
 }
 </style>
 
