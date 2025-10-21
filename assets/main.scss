@@ -163,11 +163,12 @@ body {
 
 .brand:hover .tagline .double-slash::before,
 .brand:focus-within .tagline .double-slash::before {
-  color: var(--brand-orange); text-shadow: 0 0 .35em rgba(255,78,0,.45);
+   color: var(--brand-blue); text-shadow: 0 0 .35em rgba(0,178,255,.45);
+  
 }
 .brand:hover .tagline .double-slash::after,
 .brand:focus-within .tagline .double-slash::after {
-  color: var(--brand-blue); text-shadow: 0 0 .35em rgba(0,178,255,.45);
+  color: var(--brand-orange); text-shadow: 0 0 .35em rgba(255,78,0,.45);
 }
 
 /* Respect reduced motion */
