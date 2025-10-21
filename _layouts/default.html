@@ -61,8 +61,7 @@
       <div class="brand" role="banner" aria-label="shift byDesign">
         <div class="brand-stack">
 
-          <!-- Logo cross-fade (gray → color).
-               The .layer.color opacity is driven purely by CSS :hover on .brand. -->
+          <!-- Logo -->
           <div class="swap-img brand-logo">
             <img class="layer base"
                  src="{{ '/assets/brand/logomark-gray.png'  | relative_url }}"
@@ -76,8 +75,7 @@
                  fetchpriority="high">
           </div>
 
-          <!-- Name cross-fade (85% black → full-color).
-               Keep alt text on the base layer for a11y; decorative color layer can be empty alt. -->
+          <!-- Name -->
           <div class="swap-img brand-name">
             <img class="layer base"
                  src="{{ '/assets/brand/logotype-black.png' | relative_url }}"
@@ -91,17 +89,21 @@
                  fetchpriority="high">
           </div>
 
-          <!--
-            Tagline:
-              • Neutral body text by default.
-              • On brand hover: non-keywords go black; "shift" and "design" animate to brand colors.
-              • The // glyph uses a cursor-like animation via CSS (no JS).
-          -->
+          <!-- Tagline -->
           <p class="tagline">
             <span class="shift">shift</span> is standard
             <span class="double-slash">//</span>&nbsp;
             <span class="design">design</span> is craft
           </p>
+
+          <!-- Singularity -->
+          <div class="singularity-gateway">
+            <a href="{{ '/shift.html' | relative_url }}" class="singularity-link" aria-label="Enter the Singularity">
+              <span class="dot">·</span>
+              <span class="pre">step in to the</span>
+              <span class="mark">Singularity</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
