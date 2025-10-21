@@ -283,5 +283,48 @@ body {
   }
 }
 
+/* ===== Singularity Gateway (byDesign page) ===== */
+.singularity-gateway {
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.singularity-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: #000;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0.85;
+
+  .dot {
+    font-size: 1.25rem;
+    line-height: 1;
+    font-weight: 700;
+    transition: transform 0.25s ease, color 0.25s ease;
+    margin-right: 0.1rem;
+  }
+
+  .pre  { font-weight: 450; opacity: 0.8; }
+  .mark { font-weight: 700; }
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    transform: translateY(-1px);
+
+    .dot {
+      transform: scale(1.25);
+      color: #b40000; /* Forge red accent */
+    }
+  }
+}
+
 </style>
 
