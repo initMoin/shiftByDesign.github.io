@@ -286,16 +286,15 @@ body {
 /* ===== byDesign: corner Singularity ===== */
 .bd-singularity {
   position: fixed;
-  top: 1.25rem;   /* 20px */
+  top: 1.25rem;     /* below logo stack */
   left: 1.25rem;
-  z-index: 60;    /* above brand block & socials */
+  z-index: 60;
   display: grid;
   grid-template-rows: auto auto;
   gap: .5rem;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
-  /* Hover/focus target is the whole block */
   &:hover .cta,
   &:focus-within .cta {
     opacity: 1;
@@ -303,7 +302,7 @@ body {
   }
 }
 
-/* CTA: small, clean, brand-aligned */
+/* CTA styling */
 .bd-singularity .cta {
   justify-self: start;
   background: transparent;
@@ -311,24 +310,17 @@ body {
   padding: 0;
   margin: 0 0 .125rem 0;
   cursor: pointer;
-
-  /* Typographic match: small but readable; lighter pre, heavier mark */
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.1;
   letter-spacing: .04em;
-  text-transform: none;
-
-  /* Size chosen to match your earlier smaller byDesign size */
-  font-size: .95rem;  /* tweak to .9/.92 if you want it even smaller */
+  font-size: .95rem;
   color: #000;
-
-  /* Fade in from slightly below */
   opacity: 0;
   transform: translateY(6px);
   transition: opacity .28s ease, transform .28s ease;
 
-  .pre  { font-weight: 450; opacity: .85; } /* “enter the” — lighter */
-  .mark { font-weight: 700; }               /* “Singularity” — heavier */
+  .pre  { font-weight: 450; opacity: .85; }
+  .mark { font-weight: 700; }
 
   &:focus-visible {
     outline: 2px solid #000;
@@ -336,9 +328,9 @@ body {
   }
 }
 
-/* SVG sizing/scale so it fits the byDesign canvas without scrolling */
+/* SVG scale and containment */
 .bd-singularity .svg-wrap {
-  width: 220px;    /* desktop base size */
+  width: 220px;
   height: 220px;
   display: grid;
   place-items: center;
@@ -348,28 +340,26 @@ body {
     width: 100%;
     height: 100%;
     display: block;
-    /* Ensure pointer hover covers svg for CTA reveal */
     pointer-events: auto;
   }
 }
 
-/* Optional: slightly subtler at rest; crisper on hover */
 .bd-singularity:hover .svg-wrap,
 .bd-singularity:focus-within .svg-wrap {
-  filter: none; /* keep it clean on hover */
+  filter: none;
 }
 
-/* Responsive trims to keep it proportional across breakpoints */
+/* Responsive scaling */
 @media (max-width: 1024px) {
   .bd-singularity { top: 1rem; left: 1rem; }
   .bd-singularity .svg-wrap { width: 200px; height: 200px; }
   .bd-singularity .cta { font-size: .92rem; }
 }
+
 @media (max-width: 640px) {
   .bd-singularity { top: .75rem; left: .75rem; }
   .bd-singularity .svg-wrap { width: 168px; height: 168px; }
   .bd-singularity .cta { font-size: .88rem; }
 }
-
-
+</style>
 
