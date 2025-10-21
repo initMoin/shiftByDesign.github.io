@@ -284,73 +284,128 @@ body {
 }
 
 /* ======== SHIFT PORTAL (NAMESPACE) ======== */
-.blackhole {
+/* ===== Tunables ===== */
+:root{
+  --bh-diam: 140px;            /* black core diameter */
+  --halo-mult: 2.5;            /* halo ≈ 2.5× core */
+  --ring-inner: 0.62;          /* swirl band start (ratio of core) */
+  --ring-outer: 1.35;          /* swirl band end   (ratio of core) */
+  --halo-white: rgba(255,255,255,0.95);
+  --halo-amber: rgba(255,210,90,0.95);
+  --halo-orange: rgba(255,120,25,0.85);
+  --halo-rust: rgba(120,60,20,0.55);
+}
+
+/* Container (position however you like) */
+.bh{
   position: relative;
-  width: 140px;               /* black-hole diameter */
-  aspect-ratio: 1;
+  width: calc(var(--bh-diam));
+  height: calc(var(--bh-diam));
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+/* 1) CORE — absolute black */
+.bh__core{
+  width: 100%; height: 100%;
   border-radius: 50%;
   background: #000;
-  overflow: visible;
-  isolation: isolate;
-  cursor: pointer;
+  z-index: 3;
 }
 
-/* — Halo — */
-.blackhole::before {
-  content: "";
+/* 2) HALO — white → amber → orange → rust, 2.5× core */
+.bh__halo{
   position: absolute;
-  inset: -160%;               /* extends ~2.5× radius */
+  inset: calc(-50% * (var(--halo-mult) - 1));
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255,255,255,0.9) 0%,
-    rgba(255,200,60,0.85) 20%,
-    rgba(255,120,0,0.65) 45%,
-    rgba(150,70,0,0.35) 70%,
-    rgba(20,10,0,0) 100%
-  );
-  animation: swirl 20s linear infinite;
-  filter: blur(20px) saturate(1.2);
-  z-index: -1;
-  transform-origin: center;
+  z-index: 1;
+  /* Strong, visible gradient on white backgrounds */
+  background: radial-gradient(circle,
+      var(--halo-white) 0%,
+      var(--halo-amber) 22%,
+      var(--halo-orange) 48%,
+      var(--halo-rust) 72%,
+      rgba(255,255,255,0) 100%);
+  filter: blur(10px) saturate(1.1);
+  transition: filter .6s ease, opacity .6s ease;
 }
 
-/* — Texture / turbulence overlay — */
-.blackhole::after {
-  content: "";
+/* 3) SWIRLS — actual rotating shapes, constrained to a ring by a radial mask */
+.bh__swirl{
   position: absolute;
-  inset: -160%;
+  width: calc(var(--bh-diam) * var(--ring-outer));
+  height: calc(var(--bh-diam) * var(--ring-outer));
+  z-index: 2;
   border-radius: 50%;
-  background: radial-gradient(
-      circle,
-      rgba(255,255,255,0.05) 0%,
-      rgba(255,120,0,0.04) 40%,
-      rgba(0,0,0,0) 90%
+  /* Visible! use solid color arcs + transparent gaps */
+  background:
+    conic-gradient(
+      from 10deg,
+      rgba(255,180,80,.50) 0deg 18deg,  transparent 18deg 42deg,
+      rgba(255,230,180,.45) 42deg 55deg, transparent 55deg 90deg,
+      rgba(255,140,60,.50) 90deg 118deg, transparent 118deg 150deg,
+      rgba(240,110,30,.50) 150deg 174deg, transparent 174deg 205deg,
+      rgba(255,200,120,.45) 205deg 232deg, transparent 232deg 270deg,
+      rgba(220,120,40,.50) 270deg 298deg,  transparent 298deg 330deg,
+      rgba(255,240,200,.40) 330deg 360deg
     );
-  mix-blend-mode: screen;
-  filter: blur(12px) contrast(1.2);
-  animation: noiseFlow 12s ease-in-out infinite alternate;
-  z-index: -1;
+  filter: blur(6px) saturate(1.1);
+  opacity: .85;
+  animation: bh-spin 28s linear infinite;
+  /* Radial mask: only show between inner & outer radius; soft falloff outward */
+  -webkit-mask-image: radial-gradient(circle,
+    transparent calc(var(--bh-diam)*var(--ring-inner)/2 - 1px),
+    #000 calc(var(--bh-diam)*var(--ring-inner)/2 + 1px),
+    #000 calc(var(--bh-diam)*var(--ring-outer)/2 - 6px),
+    rgba(0,0,0,0.0) calc(var(--bh-diam)*var(--ring-outer)/2 + 6px));
+          mask-image: radial-gradient(circle,
+    transparent calc(var(--bh-diam)*var(--ring-inner)/2 - 1px),
+    #000 calc(var(--bh-diam)*var(--ring-inner)/2 + 1px),
+    #000 calc(var(--bh-diam)*var(--ring-outer)/2 - 6px),
+    rgba(0,0,0,0.0) calc(var(--bh-diam)*var(--ring-outer)/2 + 6px));
 }
 
-/* — Animations — */
-@keyframes swirl {
-  from { transform: rotate(0deg) scale(1); }
-  to   { transform: rotate(360deg) scale(1); }
+/* Second swirl: larger, different pattern, counter-rotating */
+.bh__swirl.s2{
+  width: calc(var(--bh-diam) * (var(--ring-outer) + .1));
+  height: calc(var(--bh-diam) * (var(--ring-outer) + .1));
+  background:
+    conic-gradient(
+      from -20deg,
+      rgba(255,220,150,.55) 0deg 14deg,  transparent 14deg 36deg,
+      rgba(255,150,70,.55) 36deg 70deg,  transparent 70deg 102deg,
+      rgba(255,210,120,.50) 102deg 128deg, transparent 128deg 162deg,
+      rgba(240,120,50,.55) 162deg 190deg, transparent 190deg 225deg,
+      rgba(255,240,210,.45) 225deg 252deg, transparent 252deg 288deg,
+      rgba(230,120,40,.55) 288deg 318deg, transparent 318deg 360deg
+    );
+  filter: blur(10px) saturate(1.15);
+  opacity: .75;
+  animation: bh-spin-rev 46s linear infinite;
 }
 
-@keyframes noiseFlow {
-  0%,100% { transform: rotate(0deg) scale(1); }
-  50%     { transform: rotate(15deg) scale(1.05); }
+/* Spin keyframes */
+@keyframes bh-spin   { to{ transform: rotate(360deg); } }
+@keyframes bh-spin-rev { to{ transform: rotate(-360deg); } }
+
+/* Hover: obvious bloom + faster rotation */
+.bh:hover .bh__halo{
+  filter: blur(14px) saturate(1.25);
+}
+.bh:hover .bh__swirl{
+  animation-duration: 18s;
+  opacity: .95;
+  filter: blur(5px) saturate(1.25);
+}
+.bh:hover .bh__swirl.s2{
+  animation-duration: 30s;
+  opacity: .9;
 }
 
-/* — Hover breathing — */
-.blackhole:hover::before {
-  filter: blur(25px) brightness(1.2) saturate(1.4);
-  transition: filter 1.5s ease;
-}
-.blackhole:hover::after {
-  animation-duration: 8s;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .bh__swirl, .bh__halo{ animation: none !important; transition: none !important; }
 }
 </style>
 
