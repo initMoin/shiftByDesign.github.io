@@ -5,7 +5,7 @@
 # description: "shift is standard // design is craft"
 title: "shift byDesign – iOS App Design & Development in SwiftUI"
 description: "Apple-first app design & development in Swift and SwiftUI. Crafting modern apps for iOS, macOS, iPadOS, and watchOS. shift is standard; design is craft."
-url: "https://shiftby.design"     # Canonical origin used by jekyll-seo-tag
+url: "https://bydesign.iamshift.dev"     # Canonical origin used by jekyll-seo-tag
 baseurl: ""                        # Keep empty when deploying at domain root
 email: "init@shiftby.design"
 
